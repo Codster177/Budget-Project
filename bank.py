@@ -4,6 +4,7 @@ import tkinter as tk
 import datetime
 import json
 import global_func as gf
+from year_chart import Year_Chart
 from excel_manager import Excel_Manager
 from log import Log
 
@@ -36,6 +37,9 @@ excelManager = Excel_Manager(path)
 
 log = Log(excelManager)
 
+currentYear = Year_Chart(excelManager=excelManager, log=log, year=gf.today.year)
+currentYear.create_chart()
+
 # if (curYear in workbook.sheetnames):
 #     yearSheet = workbook[curYear]
 # else:
@@ -49,20 +53,31 @@ window.columnconfigure(1,weight=3)
 window.columnconfigure(2,weight=1)
 
 window.rowconfigure(0, weight=1)
-window.rowconfigure(1, weight=3)
+window.rowconfigure(1, weight=10)
 window.rowconfigure(2, weight=1)
-    
+
 window.geometry("1280x800")
 
-addTButton = gf.create_widget(window, tk.Button, text="Add Transaction", command= lambda: gf.prompt_for_transaction(window, path, log, False))
-addTButton.grid(row=1, column=2, padx=15, pady=10)
-
 leftFrame = gf.create_widget(window, tk.Frame)
-leftFrame.grid(row=1, column=0, padx=15, pady=10)
+leftFrame.grid(row=1, column=0, pady=10)
+leftFrame.rowconfigure(0, weight=1)
+leftFrame.rowconfigure(1, weight=1)
 
-viewLogButton = gf.create_widget(window, tk.Button, text="View Log", command=lambda: log.display_log(window))
-viewLogButton.grid(row=1, column=0, padx=15,pady=10)
+rightFrame = gf.create_widget(window, tk.Frame)
+rightFrame.grid(row=1, column=2, pady=10)
+rightFrame.rowconfigure(0, weight=1)
+rightFrame.rowconfigure(1, weight=1)
 
-# load_sheet(logSheet)
+addTButton = gf.create_widget(rightFrame, tk.Button, text="Add Transaction", command= lambda: gf.prompt_for_transaction(window, path, log, False))
+addTButton.grid(row=0, pady=10)
+
+editEButton = gf.create_widget(rightFrame, tk.Button, text="Edit Expectations")
+editEButton.grid(row=1, pady=10)
+
+viewLogButton = gf.create_widget(leftFrame, tk.Button, text="View Log", command=lambda: log.display_log(window))
+viewLogButton.grid(row=0, pady=10)
+
+editCatButton = gf.create_widget(leftFrame,tk.Button, text="Edit Categories")
+editCatButton.grid(row=1, pady=10)
 
 window.mainloop()

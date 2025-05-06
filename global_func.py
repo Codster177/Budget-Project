@@ -11,6 +11,7 @@ curMonth = today.month
 jsonFile = open("./json-dump.json", "r+")
 categoriesIn = []
 categoriesOut = []
+months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 # json.dump(jsonDump, jsonFile)
 
@@ -209,3 +210,45 @@ def prompt_for_transaction(window, path, log, editBool, index = None, Transactio
 
     amountTrace.trace_add('write', amountCallback)
     categoryTrace.trace_add('write', catCallback)
+
+def generate_expectations(frame, defaultBool, month):
+    frame.columnconfigure(0, weight=1)
+    frame.columnconfigure(1, weight=1)
+
+    inputLabel = create_widget(frame, tk.Label, textvariable=tk.StringVar(value="Input"))
+    inputLabel.grid(row=0, column=0, columnspan=2)
+
+    finalRow = 0
+    for category in range(len(categoriesIn)):
+        categoryLabel = create_widget(frame, tk.Label, textvariable=tk.StringVar(value=categoriesIn[category]))
+        categoryLabel.grid(row=category + 1, column=0)
+
+        
+
+        categoryInput = create_widget(frame, tk.Entry, )
+
+
+def prompt_for_expectations(window):
+    top = tk.Toplevel(window)
+    top.title("Enter Transaction")
+    top.geometry("500x350")
+    top.columnconfigure(0,weight=1)
+    top.columnconfigure(1,weight=1)
+
+    top.rowconfigure(0, weight=1)
+    top.rowconfigure(1, weight=10)
+    top.rowconfigure(2, weight=1)
+
+    top.attributes("-topmost", True)
+
+    defaultFrame = create_widget(window, tk.Frame)
+    defaultFrame.grid(row=1, column=0)
+
+    monthFrame = create_widget(window, tk.Frame)
+    monthFrame.grid(row=1, column=1)
+
+    monthSelect = create_widget(monthFrame, ttk.Combobox, values=months)
+    monthSelect.grid(row=0, column=1)
+    monthSelect.set("Select a month")
+
+

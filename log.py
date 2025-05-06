@@ -41,12 +41,12 @@ class Log:
         self.excelMan = excelMan
         self.load_log(excelMan.workbook)
 
-    def createLog(self, workbook):
-        self.logSheet = workbook.create_sheet("Log")
-        self.logSheet[0][0] = "Date"
-        self.logSheet[0][1] = "Amount"
-        self.logSheet[0][2] = "Category"
-        self.logSheet[0][3] = "Description"
+    def createLog(self):
+        self.logSheet = self.excelMan.workbook.create_sheet("Log")
+        self.logSheet.cell(row=1, column=1, value = "Date")
+        self.logSheet.cell(row=1, column=2, value = "Amount")
+        self.logSheet.cell(row=1, column=3, value = "Category")
+        self.logSheet.cell(row=1, column=4, value = "Description")
 
     def load_log(self, workbook):
         if ("Log" in workbook.sheetnames):
@@ -145,7 +145,16 @@ class Log:
 
         top.protocol("WM_DELETE_WINDOW", lambda: self.remove_log(top))
 
-
+    def get_years(self):
+        years = []
+        for transactions in self.logTransactions:
+            if (transactions.date.year not in years):
+                years.append(transactions.date.year)
+        years.sort()
+        return years
+    
+    def get_transactions(self):
+        return self.logTransactions
 
     def remove_log(self, top):
         self.log_view = None
