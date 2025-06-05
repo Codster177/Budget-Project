@@ -1,5 +1,6 @@
 import openpyxl as opxl
 import tkinter as tk
+import global_func as gf
 from tkinter import ttk
 
 class Excel_Manager:
@@ -10,19 +11,27 @@ class Excel_Manager:
         self.path = path
         self.workbook = opxl.load_workbook(self.path)
 
-    def make_excelView(self, sheetName, window):
+    def make_excelView(self, sheetName, window, columnSize = 100, stretch = 0):
         sheet = self.workbook[sheetName]
-        excelView = self.load_sheet(sheet, window)
+        excelView = self.load_sheet(sheet, window, columnSize=columnSize, stretch=stretch)
         return excelView
 
-    def load_sheet(self, sheet, window):
+    def load_sheet(self, sheet, window, columnSize, stretch):
         list_values = list(sheet.values)
         cols = list_values[0]
         tree = ttk.Treeview(window, column= cols, show="headings")
-        tree.config(height=35)
 
+        height = int(((window.winfo_screenheight())/24)-10)
+
+        tree.config(height=height)
+
+        i = 0
         for col_name in cols:
-            tree.heading(col_name, text = col_name)
+            tree.heading('#' + str(i), text = col_name)
+            i = i + 1
+            if (col_name == None):
+                continue
+            tree.column(col_name, minwidth=columnSize, width=columnSize, stretch=stretch)
 
         for value_tuple in list_values[1:]:
             tree.insert('', tk.END, values=value_tuple)

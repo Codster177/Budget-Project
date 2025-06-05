@@ -43,5 +43,25 @@ class Year_Chart:
         self.yearSheet.cell(column=1, row=lastRow, value="Overall Total")
 
         self.excelMan.workbook.save("Tracker.xlsx")
+
+    def display_chart(self, window, row, column, columnSize, stretch):
+        yearChartDisplay = self.excelMan.make_excelView(str(self.year), window, columnSize=columnSize, stretch=stretch)
+        yearChartDisplay.grid(row = row, column = column)
+        return yearChartDisplay
+
+    def update_year(self, chartLabel):
+        if (str(self.year) not in self.excelMan.workbook.sheetnames):
+            self.create_chart()
+        chartLabel.configure(textvariable=tk.StringVar(value=str(self.year)))
+
+    def previous_year(self, chartLabel):
+        self.year = self.year - 1
+        self.update_year(chartLabel)
+
+    def next_year(self, chartLabel):
+        self.year = self.year + 1
+        self.update_year(chartLabel)
+
+
         
         

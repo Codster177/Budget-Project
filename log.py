@@ -118,7 +118,9 @@ class Log:
     def display_log(self, window):
         top = tk.Toplevel(window)
         top.title("Log")
-        top.geometry("900x775")
+
+        gf.setupScreenSize(top, manSize=0.7)
+
         top.columnconfigure(0, weight=1)
         top.columnconfigure(1, weight=3)
         top.columnconfigure(2, weight=1)

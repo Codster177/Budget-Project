@@ -37,8 +37,11 @@ excelManager = Excel_Manager(path)
 
 log = Log(excelManager)
 
+gf.check_years(excelManager)
+
 currentYear = Year_Chart(excelManager=excelManager, log=log, year=gf.today.year)
-currentYear.create_chart()
+if (str(currentYear.year) not in excelManager.workbook.sheetnames):
+    currentYear.create_chart()
 
 # if (curYear in workbook.sheetnames):
 #     yearSheet = workbook[curYear]
@@ -56,7 +59,7 @@ window.rowconfigure(0, weight=1)
 window.rowconfigure(1, weight=10)
 window.rowconfigure(2, weight=1)
 
-window.geometry("1280x800")
+gf.setupScreenSize(window)
 
 leftFrame = gf.create_widget(window, tk.Frame)
 leftFrame.grid(row=1, column=0, pady=10)
@@ -68,10 +71,16 @@ rightFrame.grid(row=1, column=2, pady=10)
 rightFrame.rowconfigure(0, weight=1)
 rightFrame.rowconfigure(1, weight=1)
 
+middleFrame = gf.create_widget(window, tk.Frame)
+middleFrame.grid(row=1, column=1, pady=10)
+middleFrame.rowconfigure(0, weight=1)
+middleFrame.rowconfigure(1, weight=10)
+middleFrame.rowconfigure(2, weight=1)
+
 addTButton = gf.create_widget(rightFrame, tk.Button, text="Add Transaction", command= lambda: gf.prompt_for_transaction(window, path, log, False))
 addTButton.grid(row=0, pady=10)
 
-editEButton = gf.create_widget(rightFrame, tk.Button, text="Edit Expectations")
+editEButton = gf.create_widget(rightFrame, tk.Button, text="Edit Expectations", command=lambda: gf.prompt_for_expectations(window))
 editEButton.grid(row=1, pady=10)
 
 viewLogButton = gf.create_widget(leftFrame, tk.Button, text="View Log", command=lambda: log.display_log(window))
@@ -79,5 +88,18 @@ viewLogButton.grid(row=0, pady=10)
 
 editCatButton = gf.create_widget(leftFrame,tk.Button, text="Edit Categories")
 editCatButton.grid(row=1, pady=10)
+
+chartLabel = gf.create_widget(middleFrame, tk.Label, textvariable=tk.StringVar(value=str(currentYear.year)), height=1)
+chartLabel.grid(row=0, column=1)
+
+previousChartButton = gf.create_widget(middleFrame, tk.Button, text="<", command=lambda: currentYear.previous_year(chartLabel))
+previousChartButton.grid(row=0, column=0)
+
+nextChartButton = gf.create_widget(middleFrame, tk.Button, text=">", command=lambda: currentYear.next_year(chartLabel))
+nextChartButton.grid(row=0, column=2)
+
+
+mainChart = currentYear.display_chart(middleFrame, row=1, column=1, columnSize=100, stretch=0)
+
 
 window.mainloop()

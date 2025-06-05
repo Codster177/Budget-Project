@@ -12,6 +12,7 @@ jsonFile = open("./json-dump.json", "r+")
 categoriesIn = []
 categoriesOut = []
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+years = []
 
 # json.dump(jsonDump, jsonFile)
 
@@ -19,16 +20,51 @@ saveInfo = json.load(jsonFile)
 categoriesIn = saveInfo["Categories In"]
 categoriesOut = saveInfo["Categories Out"]
 
+windowWidth = 0
+windowHeight = 0
+
 
 def create_widget(parent, widget_type, **options):
     return widget_type(parent, **options)
+
+def check_years(excelMan):
+    for sheet in excelMan.workbook.sheetnames:
+        if (sheet == "Log"):
+            continue
+        years.append(sheet)
+        
+
+def setupScreenSize(window, verticalBool = False, squareBool = False, manSize = 0.80):
+    windowWidth = window.winfo_screenwidth()
+    windowHeight = window.winfo_screenheight()
+    print(windowHeight)
+    
+    if (verticalBool):
+        height = int(windowHeight * manSize)
+        width = height / 2
+    
+    elif (squareBool):
+        height = int(windowHeight * manSize)
+        width = int(windowWidth * manSize)
+        if (height < width):
+            width = height
+        else:
+            height = width
+
+    else:
+        width = int(windowWidth * manSize)
+        height = int(windowHeight * manSize)
+
+    window.geometry(str(width) + "x" + str(height))
 
 # Opens the popup to prompt user for a transaction input. Reads the input and sends
 # it to the log_transaction().
 def prompt_for_transaction(window, path, log, editBool, index = None, Transaction = None):
     top = tk.Toplevel(window)
     top.title("Enter Transaction")
-    top.geometry("250x350")
+    
+    setupScreenSize(top, squareBool= True, manSize= 0.5)
+
     top.columnconfigure(0,weight=1)
     top.columnconfigure(1,weight=1)
     top.columnconfigure(2,weight=1)
@@ -230,8 +266,8 @@ def generate_expectations(frame, defaultBool, month):
 
 def prompt_for_expectations(window):
     top = tk.Toplevel(window)
-    top.title("Enter Transaction")
-    top.geometry("500x350")
+    top.title("Expectations Settings")
+    setupScreenSize(top, squareBool= True, manSize= 0.7)
     top.columnconfigure(0,weight=1)
     top.columnconfigure(1,weight=1)
 
@@ -241,13 +277,15 @@ def prompt_for_expectations(window):
 
     top.attributes("-topmost", True)
 
-    defaultFrame = create_widget(window, tk.Frame)
+    defaultFrame = create_widget(top, tk.Frame)
     defaultFrame.grid(row=1, column=0)
 
-    monthFrame = create_widget(window, tk.Frame)
+    monthFrame = create_widget(top, tk.Frame)
     monthFrame.grid(row=1, column=1)
 
-    monthSelect = create_widget(monthFrame, ttk.Combobox, values=months)
+    yearSelect = create_widget(top, ttk.Combobox, )
+
+    monthSelect = create_widget(top, ttk.Combobox, values=months)
     monthSelect.grid(row=0, column=1)
     monthSelect.set("Select a month")
 
