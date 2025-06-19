@@ -31,8 +31,6 @@ from log import Log
 
 path = "./Tracker.xlsx"
 
-# def createYear(logSheet, yearSheet)
-
 excelManager = Excel_Manager(path)
 
 log = Log(excelManager)
@@ -43,11 +41,7 @@ currentYear = Year_Chart(excelManager=excelManager, log=log, year=gf.today.year)
 if (str(currentYear.year) not in excelManager.workbook.sheetnames):
     currentYear.create_chart()
 
-# if (curYear in workbook.sheetnames):
-#     yearSheet = workbook[curYear]
-# else:
-#     yearSheet = workbook.create_sheet(str(curYear))
-
+# Main window configuration //
 window = tk.Tk()
 window.title("Excel Viewer")
 
@@ -61,6 +55,9 @@ window.rowconfigure(2, weight=1)
 
 gf.setupScreenSize(window)
 
+# \\
+
+# Set up frames in the main window: //
 leftFrame = gf.create_widget(window, tk.Frame)
 leftFrame.grid(row=1, column=0, pady=10)
 leftFrame.rowconfigure(0, weight=1)
@@ -77,6 +74,9 @@ middleFrame.rowconfigure(0, weight=1)
 middleFrame.rowconfigure(1, weight=10)
 middleFrame.rowconfigure(2, weight=1)
 
+# \\
+
+# Adds widgets in the main window: //
 addTButton = gf.create_widget(rightFrame, tk.Button, text="Add Transaction", command= lambda: gf.prompt_for_transaction(window, path, log, False))
 addTButton.grid(row=0, pady=10)
 
@@ -98,8 +98,31 @@ previousChartButton.grid(row=0, column=0)
 nextChartButton = gf.create_widget(middleFrame, tk.Button, text=">", command=lambda: currentYear.next_year(chartLabel))
 nextChartButton.grid(row=0, column=2)
 
+# \\
 
-mainChart = currentYear.display_chart(middleFrame, row=1, column=1, columnSize=45, stretch=0)
+# Sets up chart and scrollbars: //
+chartFrame = gf.create_widget(middleFrame, tk.Frame)
+chartFrame.grid(row=1, column=1)
+chartFrame.grid_propagate(False)
+chartFrame.config(width=600, height=500)
 
+mainChart = currentYear.display_chart(chartFrame, row=0, column=0, columnSize=75, stretch=0)
+
+hScroll = gf.create_widget(chartFrame, tk.Scrollbar, orient="horizontal")
+hScroll.grid(row=1, column=0, sticky="ew")
+
+vScroll = gf.create_widget(chartFrame, tk.Scrollbar, orient="vertical")
+vScroll.grid(row=0, column=1 ,sticky="ns")
+
+chartFrame.rowconfigure(0, weight=1)
+chartFrame.columnconfigure(0, weight=1)
+
+mainChart.config(xscrollcommand=hScroll.set)
+mainChart.config(yscrollcommand=vScroll.set)
+
+hScroll.config(command=mainChart.xview)
+vScroll.config(command=mainChart.yview)
+
+# \\
 
 window.mainloop()

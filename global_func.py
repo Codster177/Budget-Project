@@ -247,6 +247,8 @@ def prompt_for_transaction(window, path, log, editBool, index = None, Transactio
     amountTrace.trace_add('write', amountCallback)
     categoryTrace.trace_add('write', catCallback)
 
+
+# Not called yet. Will generate the widgets to enter expectations into each category for.
 def generate_expectations(frame, defaultBool, month):
     frame.columnconfigure(0, weight=1)
     frame.columnconfigure(1, weight=1)
@@ -258,8 +260,6 @@ def generate_expectations(frame, defaultBool, month):
     for category in range(len(categoriesIn)):
         categoryLabel = create_widget(frame, tk.Label, textvariable=tk.StringVar(value=categoriesIn[category]))
         categoryLabel.grid(row=category + 1, column=0)
-
-        
 
         categoryInput = create_widget(frame, tk.Entry, )
 
