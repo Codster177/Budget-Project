@@ -25,13 +25,15 @@ class Excel_Manager:
 
         tree.config(height=height)
 
-        i = 0
+        i = 1
         for col_name in cols:
-            tree.heading('#' + str(i), text = col_name)
+            if (i == 1):
+                tree.heading('#' + str(i), text = col_name)
+                tree.column('#' + str(i), minwidth=int(columnSize * 1.5), width=int(columnSize * 1.5), stretch=stretch)
+            else:
+                tree.heading('#' + str(i), text = col_name)
+                tree.column('#' + str(i), minwidth=columnSize, width=columnSize, stretch=stretch)
             i = i + 1
-            if (col_name == None):
-                continue
-            tree.column(col_name, minwidth=columnSize, width=columnSize, stretch=stretch)
 
         for value_tuple in list_values[1:]:
             tree.insert('', tk.END, values=value_tuple)

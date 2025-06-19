@@ -99,7 +99,7 @@ nextChartButton = gf.create_widget(middleFrame, tk.Button, text=">", command=lam
 nextChartButton.grid(row=0, column=2)
 
 
-mainChart = currentYear.display_chart(middleFrame, row=1, column=1, columnSize=100, stretch=0)
+mainChart = currentYear.display_chart(middleFrame, row=1, column=1, columnSize=45, stretch=0)
 
 
 window.mainloop()
