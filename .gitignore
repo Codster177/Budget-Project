@@ -1,3 +1,10 @@
+# Electron app
+budget-electron/node_modules/
+budget-electron/out/
+budget-electron/dist/
+budget-electron/release/
+budget-electron/.vite/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

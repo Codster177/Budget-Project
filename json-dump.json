@@ -2,7 +2,9 @@
     "Categories In": [
         "Paychecks",
         "Financial Aid",
-        "Misc"
+        "Tips",
+        "Misc",
+        "Lazy Rollover"
     ],
     "Categories Out": [
         "Rent",
@@ -11,6 +13,7 @@
         "Credit Card",
         "Subscriptions",
         "Dining",
+        "Dates",
         "Recreational",
         "Gifts",
         "Misc"
