@@ -35,6 +35,7 @@ function SectionTotals({ categories, expected, actual, monthIndex }) {
       <td className="px-2 py-1 border border-border text-right">
         <ActualCell actual={actTotal} expected={expTotal} />
       </td>
+      <td className="px-2 py-1 border border-border" />
     </React.Fragment>
   )
 }
@@ -44,6 +45,9 @@ function fmtCumulative(val) {
   if (isNaN(n) || n === 0) return '—'
   return n < 0 ? `-$${Math.abs(n).toFixed(2)}` : `$${n.toFixed(2)}`
 }
+
+// Total columns: 1 (category) + 12 months × 3 cols (Exp, Act, Forecast) = 37
+const TOTAL_COLS = 37
 
 export default function YearChart({ data }) {
   if (!data) return null
@@ -72,18 +76,19 @@ export default function YearChart({ data }) {
               Category
             </th>
             {MONTHS_SHORT.map(m => (
-              <th key={m} colSpan={2} className="px-2 py-2 text-center font-semibold border border-border min-w-[120px]">
+              <th key={m} colSpan={3} className="px-2 py-2 text-center font-semibold border border-border min-w-[180px]">
                 {m}
               </th>
             ))}
           </tr>
-          {/* Expected / Actual sub-header */}
+          {/* Exp. / Act. / Forecast sub-header */}
           <tr className="bg-muted/50">
             <th className="sticky left-0 z-10 bg-muted/50 border border-border" />
             {MONTHS_SHORT.map(m => (
               <React.Fragment key={m}>
                 <th className="px-2 py-1 text-center text-muted-foreground border border-border font-normal">Exp.</th>
                 <th className="px-2 py-1 text-center text-muted-foreground border border-border font-normal">Act.</th>
+                <th className="px-2 py-1 text-center text-muted-foreground border border-border font-normal">Forecast</th>
               </React.Fragment>
             ))}
           </tr>
@@ -92,7 +97,7 @@ export default function YearChart({ data }) {
         <tbody>
           {/* INPUT section */}
           <tr className="bg-blue-50">
-            <td colSpan={25} className="sticky left-0 px-3 py-1 font-semibold text-blue-700 border border-border text-xs uppercase tracking-wide">
+            <td colSpan={TOTAL_COLS} className="sticky left-0 px-3 py-1 font-semibold text-blue-700 border border-border text-xs uppercase tracking-wide">
               Income
             </td>
           </tr>
@@ -107,6 +112,7 @@ export default function YearChart({ data }) {
                   <td className="px-2 py-1 border border-border text-right">
                     <ActualCell actual={actualIn?.[cat]?.[m]} expected={expectedIn?.[cat]?.[m]} />
                   </td>
+                  <td className="px-2 py-1 border border-border" />
                 </React.Fragment>
               ))}
             </tr>
@@ -121,7 +127,7 @@ export default function YearChart({ data }) {
 
           {/* OUTPUT section */}
           <tr className="bg-orange-50">
-            <td colSpan={25} className="sticky left-0 px-3 py-1 font-semibold text-orange-700 border border-border text-xs uppercase tracking-wide">
+            <td colSpan={TOTAL_COLS} className="sticky left-0 px-3 py-1 font-semibold text-orange-700 border border-border text-xs uppercase tracking-wide">
               Expenses
             </td>
           </tr>
@@ -136,6 +142,7 @@ export default function YearChart({ data }) {
                   <td className="px-2 py-1 border border-border text-right">
                     <ActualCell actual={actualOut?.[cat]?.[m]} expected={expectedOut?.[cat]?.[m]} />
                   </td>
+                  <td className="px-2 py-1 border border-border" />
                 </React.Fragment>
               ))}
             </tr>
@@ -157,11 +164,12 @@ export default function YearChart({ data }) {
                 <td className="px-2 py-1 border border-border text-right">
                   <ActualCell actual={overallActual(m)} expected={overallExpected(m)} />
                 </td>
+                <td className="px-2 py-1 border border-border" />
               </React.Fragment>
             ))}
           </tr>
 
-          {/* Cumulative running total — sum of all transactions in the log up to end of each month */}
+          {/* Cumulative running total */}
           <tr className="bg-slate-100 font-bold border-t-2 border-slate-400">
             <td className="sticky left-0 z-10 bg-slate-100 px-3 py-1.5 border border-border text-slate-700">
               Cumulative Total
@@ -171,7 +179,7 @@ export default function YearChart({ data }) {
               const isPositive = val > 0
               const isZero = val === 0
               return (
-                <td key={m} colSpan={2} className="px-2 py-1.5 border border-border text-center font-bold">
+                <td key={m} colSpan={3} className="px-2 py-1.5 border border-border text-center font-bold">
                   <span className={cn(
                     isZero ? 'text-muted-foreground' : isPositive ? 'text-green-700' : 'text-red-600'
                   )}>
