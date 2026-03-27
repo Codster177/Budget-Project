@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Connect Your Bank</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #0f0f0f;
+      color: #888;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <p>Opening bank connection…</p>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  <script>
+    const token = new URLSearchParams(window.location.search).get('link_token')
+    const handler = Plaid.create({
+      token: token,
+      onSuccess: function(public_token, metadata) {
+        window.plaidBridge.sendResult({ success: true, publicToken: public_token, metadata: metadata })
+      },
+      onExit: function(err) {
+        window.plaidBridge.sendResult({ success: false, error: err })
+      }
+    })
+    handler.open()
+  </script>
+</body>
+</html>

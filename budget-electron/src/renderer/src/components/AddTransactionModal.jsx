@@ -60,7 +60,7 @@ export default function AddTransactionModal({ open, onOpenChange, categories, on
 
     try {
       if (isEdit) {
-        await window.api.editTransaction({ index: editIndex, ...payload })
+        await window.api.editTransaction({ id: editIndex, ...payload })
       } else {
         await window.api.addTransaction(payload)
       }

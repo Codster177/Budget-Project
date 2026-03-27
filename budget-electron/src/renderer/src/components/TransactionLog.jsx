@@ -62,15 +62,15 @@ export default function TransactionLog({ open, onOpenChange, categories, onChang
     }
   }, [open])
 
-  async function handleDelete(originalIndex) {
-    await window.api.deleteTransaction({ index: originalIndex })
+  async function handleDelete(id) {
+    await window.api.deleteTransaction({ id })
     await load()
     onChanged()
   }
 
-  function handleEdit(tx, originalIndex) {
+  function handleEdit(tx) {
     setEditTx(tx)
-    setEditIndex(originalIndex)
+    setEditIndex(tx.id)
     setEditOpen(true)
   }
 
@@ -80,11 +80,7 @@ export default function TransactionLog({ open, onOpenChange, categories, onChang
     onChanged()
   }
 
-  // Pair each transaction with its original index before filtering so that
-  // delete/edit always reference the correct row in the data file.
-  const filtered = transactions
-    .map((tx, i) => ({ tx, originalIndex: i }))
-    .filter(({ tx }) => matchesQuery(tx, query))
+  const filtered = transactions.filter(tx => matchesQuery(tx, query))
 
   return (
     <>
@@ -121,6 +117,7 @@ export default function TransactionLog({ open, onOpenChange, categories, onChang
             </p>
           )}
 
+
           <div className="overflow-auto flex-1 rounded-md border border-border">
             <table className="w-full text-sm">
               <thead className="bg-muted sticky top-0">
@@ -140,11 +137,11 @@ export default function TransactionLog({ open, onOpenChange, categories, onChang
                     </td>
                   </tr>
                 )}
-                {filtered.map(({ tx, originalIndex }) => {
+                {filtered.map(tx => {
                   const amt = parseFloat(tx.Amount)
                   const isIncome = amt >= 0
                   return (
-                    <tr key={originalIndex} className="hover:bg-muted/30 border-b border-border last:border-0">
+                    <tr key={tx.id} className="hover:bg-muted/30 border-b border-border last:border-0">
                       <td className="px-3 py-2 text-muted-foreground">{formatDate(tx.Date)}</td>
                       <td className={`px-3 py-2 text-right font-medium tabular-nums ${isIncome ? 'text-green-600' : 'text-red-500'}`}>
                         {formatAmt(tx.Amount)}
@@ -153,10 +150,10 @@ export default function TransactionLog({ open, onOpenChange, categories, onChang
                       <td className="px-3 py-2 text-muted-foreground max-w-[200px] truncate">{tx.Description}</td>
                       <td className="px-3 py-2">
                         <div className="flex gap-1 justify-end">
-                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEdit(tx, originalIndex)}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => handleEdit(tx)}>
                             <Pencil className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => handleDelete(originalIndex)}>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => handleDelete(tx.id)}>
                             <Trash2 className="h-3.5 w-3.5" />
                           </Button>
                         </div>
